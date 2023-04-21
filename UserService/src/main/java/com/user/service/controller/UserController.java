@@ -29,29 +29,30 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(user1);
     }
 
-    int retryCount=1;
+    //int retryCount=1;
     @GetMapping("/{userId}")
     //@CircuitBreaker(name="ratingHotelBreaker",fallbackMethod = "ratingHotelFallback")
     //@Retry(name="ratingHotelRetry",fallbackMethod = "ratingHotelFallback")
     @RateLimiter(name="userRateLimiter",fallbackMethod = "ratingHotelFallback")
     public ResponseEntity<User> getSingleUser(@PathVariable String userId){
         logger.info("Get Single User Handler: UserController");
-        logger.info("Retry Count: {}", retryCount);
-        retryCount++;
+        //logger.info("Retry Count: {}", retryCount);
+        //retryCount++;
         User user=userService.getUser(userId);
         return ResponseEntity.ok(user);
     }
 
     //creating fall back method for circuitbreaker
     public ResponseEntity<User> ratingHotelFallback(String userId,Exception ex){
-        logger.info("Fallback is executed because service is down: ", ex.getMessage());
+        ex.printStackTrace();
+        //logger.info("Fallback is executed because service is down: ", ex.getMessage());
         User user=User.builder()
                 .email("dummy@gmail.com")
                 .name("Dummy")
                 .about("User created because service is down")
                 .userId("12345")
                 .build();
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user,HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping

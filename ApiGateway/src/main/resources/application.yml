@@ -32,3 +32,11 @@ spring:
             - Path=/ratings/**
   config:
     import: optional:configserver:http://localhost:8085
+
+okta:
+  oauth2:
+    issuer: https://dev-39899819.okta.com/oauth2/default
+    audience: api://default
+    client-id: 0oa97gpjsuXdVGXLk5d7
+    client-secret: FcIMDLTroSYuYybqfrjMJHnYa8DWFOI6v-AbeItv
+    scopes: openid, profile, email, offline_access
